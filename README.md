@@ -1,0 +1,1 @@
+# Glutinum.Feliz.ReactResizeDetector
