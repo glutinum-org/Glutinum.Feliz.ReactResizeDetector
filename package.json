@@ -1,0 +1,32 @@
+{
+    "name": "glutinum.feliz.reactresizedetector",
+    "private": true,
+    "scripts": {
+        "postinstall": "dotnet tool restore",
+        "dev-vite": "cd Client && vite dev",
+        "dev-fable": "cd Client/src && dotnet fable --watch",
+        "dev-css-codegen": "npx nodemon --watch Client/src -e scss --exec \"node scripts/CssModuleCodeGen.mjs\"",
+        "dev": "concurrently -p none npm:dev-*"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/glutinum-org/Glutinum.Feliz.ReactResizeDetector.git"
+    },
+    "author": "Maxime Mangel",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/glutinum-org/Glutinum.Feliz.ReactResizeDetector/issues"
+    },
+    "homepage": "https://github.com/glutinum-org/Glutinum.Feliz.ReactResizeDetector#readme",
+    "devDependencies": {
+        "concurrently": "^7.0.0",
+        "nodemon": "^2.0.15",
+        "sass": "^1.49.9",
+        "vite": "^2.8.6"
+    },
+    "dependencies": {
+        "react": "^17.0.2",
+        "react-dom": "^17.0.2",
+        "react-resize-detector": "^7.0.0"
+    }
+}
