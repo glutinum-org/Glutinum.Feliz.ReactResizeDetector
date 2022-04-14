@@ -1,14 +1,13 @@
-namespace Feliz.ReactResizeDetector
+namespace rec Feliz.ReactResizeDetector
 
 open Feliz
 open Fable.Core
-open Fable.Core.JsInterop
 
 #nowarn "3390" // disable warnings for invalid XML comments
 
 [<StringEnum>]
 [<RequireQualifiedAccess>]
-type PropsRefreshMode =
+type RefreshMode =
     | Throttle
     | Debounce
 
@@ -19,11 +18,16 @@ type ResizeObserverOptionsBox =
     | [<CompiledName "border-box">] BorderBox
     | [<CompiledName "device-pixel-content-box">] DevicePixelContentBox
 
+type [<AllowNullLiteral>] ReactResizeDetectorDimensions =
+    abstract height: float option with get
+    abstract width: float option with get
+
+type ChildFunctionProps<'ElementT when 'ElementT :> Browser.Types.HTMLElement> =
+    inherit ReactResizeDetectorDimensions
+    abstract targetRef: IRefValue<'ElementT> option with get
+
 [<Erase>]
 type reactResizeDetector =
-    static member inline reactResizeDetector (properties : #IReactResizeDetectorProperty) =
-        Interop.reactApi.createElement(import "default" "react-resize-detector", createObj properties)
-
     /// Function that will be invoked with observable element's width and height.
     /// Default: undefined
     static member inline onResize (callback : (float option -> float option -> unit)) =
@@ -31,18 +35,18 @@ type reactResizeDetector =
 
     /// Trigger update on height change.
     /// Default: true
-    static member inline handleHeight (value : bool) =
-        Interop.mkReactResizeDetectorProperty "handleHeight" value
+    static member inline handleHeight =
+        Interop.mkReactResizeDetectorProperty "handleHeight" true
 
     /// Trigger onResize on width change.
     /// Default: true
-    static member inline handleWidth (value : bool) =
-        Interop.mkReactResizeDetectorProperty "handleWidth" value
+    static member inline handleWidth =
+        Interop.mkReactResizeDetectorProperty "handleWidth" true
 
     /// Do not trigger update when a component mounts.
     /// Default: false
-    static member inline skipOnMount (value : bool) =
-        Interop.mkReactResizeDetectorProperty "skipOnMount" value
+    static member inline skipOnMount =
+        Interop.mkReactResizeDetectorProperty "skipOnMount" true
 
     /// <summary>
     /// Changes the update strategy. Possible values: "throttle" and "debounce".
@@ -50,7 +54,7 @@ type reactResizeDetector =
     /// undefined - callback will be fired for every frame.
     /// Default: undefined
     /// </summary>
-    static member inline refreshMode (value : PropsRefreshMode) =
+    static member inline refreshMode (value : RefreshMode) =
         Interop.mkReactResizeDetectorProperty "refreshMode" value
 
     /// <summary>
@@ -64,14 +68,37 @@ type reactResizeDetector =
     /// Pass additional params to <c>refreshMode</c> according to lodash docs
     /// Default: undefined
     /// </summary>
-    static member inline refreshOptions (?leading : bool, ?trailing : bool) =
-        Interop.mkReactResizeDetectorProperty "refreshOptions"
-            {|
-                leading = leading
-                trailing = trailing
-            |}
+    static member inline refreshOptions (refreshOptions : RefreshOptions) =
+        Interop.mkReactResizeDetectorProperty "refreshOptions" refreshOptions
 
     /// <summary>These options will be used as a second parameter of <c>resizeObserver.observe</c> method</summary>
     /// <seealso href="https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver/observe">Default: undefined</seealso>
     static member inline observerOptions (value : ResizeObserverOptionsBox) =
         Interop.mkReactResizeDetectorProperty "observerOptions" value
+
+    static member children (value : ChildFunctionProps<_> -> ReactElement) =
+        Interop.mkReactResizeDetectorProperty "children" value
+
+[<Global>]
+type ResizeObserverOptions
+    [<ParamObject; Emit "$0">]
+    (
+        ?box : ResizeObserverOptionsBox
+    ) =
+    /// <summary>
+    /// Sets which box model the observer will observe changes to. Possible values
+    /// are <c>content-box</c> (the default), and <c>border-box</c>.
+    /// </summary>
+    /// <default>'content-box'</default>
+    member val box: ResizeObserverOptionsBox option = jsNative with get, set
+
+[<Global>]
+type RefreshOptions
+    [<ParamObject; Emit "$0">]
+    (
+        ?leading : bool,
+        ?trailing : bool
+    )
+    =
+    member val leading : bool option = jsNative with get, set
+    member val trailing : bool option = jsNative with get, set

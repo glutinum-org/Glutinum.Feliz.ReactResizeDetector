@@ -13,6 +13,12 @@
       "commands": [
         "fable"
       ]
+    },
+    "releaseit": {
+      "version": "0.1.0",
+      "commands": [
+        "release"
+      ]
     }
   }
 }

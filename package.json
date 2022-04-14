@@ -2,10 +2,10 @@
     "name": "glutinum.feliz.reactresizedetector",
     "private": true,
     "scripts": {
+        "clean": "shx rm -rf Demo/**/*.js.js",
         "postinstall": "dotnet tool restore",
         "dev-vite": "cd Client && vite dev",
         "dev-fable": "cd Client/src && dotnet fable --watch",
-        "dev-css-codegen": "npx nodemon --watch Client/src -e scss --exec \"node scripts/CssModuleCodeGen.mjs\"",
         "dev": "concurrently -p none npm:dev-*"
     },
     "repository": {
@@ -19,9 +19,12 @@
     },
     "homepage": "https://github.com/glutinum-org/Glutinum.Feliz.ReactResizeDetector#readme",
     "devDependencies": {
+        "@vitejs/plugin-react": "^1.3.0",
         "concurrently": "^7.0.0",
         "nodemon": "^2.0.15",
+        "normalize.css": "^8.0.1",
         "sass": "^1.49.9",
+        "shx": "^0.3.4",
         "vite": "^2.8.6"
     },
     "dependencies": {

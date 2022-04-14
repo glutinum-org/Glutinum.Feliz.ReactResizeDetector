@@ -1,0 +1,31 @@
+@import "../node_modules/normalize.css/normalize.css";
+
+.wrapper {
+    display: flex;
+    height: 100vh;
+}
+
+.left-panel {
+    width: 200px;
+    padding: 10px;
+    background-color: lightcyan;
+}
+
+.right-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+    position: relative;
+}
+
+.actions-area {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+.toggle-sidebar {
+    margin-right: 0.5rem;
+}
