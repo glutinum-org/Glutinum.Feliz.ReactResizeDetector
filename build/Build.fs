@@ -56,11 +56,7 @@ let main args =
         |> runParallel
     }
 
-    let build = BuildTask.create "Build" [ npmInstall; clean ] {
-        run dotnet "build" srcPath
-    }
-
-    let release = BuildTask.create "Release" [ build ] {
+    let release = BuildTask.create "Release" [ ] {
         let nugetKey =
             match Environment.environVarOrNone "nuget_key" with
             | Some nugetKey ->
@@ -118,7 +114,7 @@ let main args =
             run git $"push origin %s{tagVersion}" cwd
 
             GitHub.createClientWithToken githubToken
-            |> GitHub.draftNewRelease gitOwner gitName tagVersion (String.IsNullOrEmpty version.Prerelease) [ releaseNote ]
+            |> GitHub.draftNewRelease gitOwner gitName tagVersion (not (String.IsNullOrEmpty version.Prerelease)) [ releaseNote ]
             |> GitHub.publishDraft
             |> Async.RunSynchronously
     }
