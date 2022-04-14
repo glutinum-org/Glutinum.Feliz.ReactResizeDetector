@@ -107,8 +107,13 @@ let main args =
                 |> CmdLine.toString
 
             run dotnet args cwd
+            let tagVersion = $"v%s{version.ToString()}"
 
-            let tagVersion = $"v{(version.ToString())}"
+            run git "add ." cwd
+            run git $"""commit -m "Release %s{tagVersion}""" cwd
+            run git $"push" cwd
+            run git $"""tag -a %s{tagVersion} -m "Release %s{tagVersion}" """ cwd
+            run git $"push origin %s{tagVersion}" cwd
 
             GitHub.createClientWithToken githubToken
             |> GitHub.draftNewRelease gitOwner gitName tagVersion (String.IsNullOrEmpty version.Prerelease) [ releaseNote ]

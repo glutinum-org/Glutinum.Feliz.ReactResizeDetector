@@ -130,6 +130,8 @@ let npx =
     | Some npx ->
         createProcess npx
 
+let git = createProcess "git"
+
 module Glob =
 
     open Fake.IO.FileSystemOperators
