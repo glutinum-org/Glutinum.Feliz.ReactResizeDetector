@@ -60,7 +60,7 @@ let main args =
         run dotnet "build" srcPath
     }
 
-    let release = BuildTask.create "Release" [ ] {
+    let release = BuildTask.create "Release" [ build ] {
         let nugetKey =
             match Environment.environVarOrNone "nuget_key" with
             | Some nugetKey ->
@@ -100,13 +100,15 @@ let main args =
 
             let args =
                 CmdLine.empty
-                |> CmdLine.append "push"
+                |> CmdLine.appendRaw "nuget"
+                |> CmdLine.appendRaw "push"
                 |> CmdLine.append nupkgFile
                 |> CmdLine.appendPrefix "--source" "nuget.org"
                 |> CmdLine.appendPrefix "--api-key" nugetKey
                 |> CmdLine.toString
 
             run dotnet args cwd
+
             let tagVersion = $"v%s{version.ToString()}"
 
             run git "add ." cwd
