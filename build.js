@@ -18,6 +18,16 @@ const log = console.log
 // Crash script on error
 shell.config.fatal = true;
 
+const getEnvVariable = function (varName) {
+    const value = process.env[varName];
+    if (value === undefined) {
+        log(chalk.red(`Missing environnement variable ${varName}`))
+        process.exit(1)
+    } else {
+        return value;
+    }
+}
+
 export const getLastVersion = async () => {
 
     // checks if the package.json and CHANGELOG exist
@@ -96,6 +106,7 @@ async function devHandler() {
 }
 
 async function releaseHandler () {
+    const nugetKey = getEnvVariable("nuget_key");
     const status = await simpleGit().status();
 
     // Get all the uncommitted changes
@@ -106,7 +117,7 @@ async function releaseHandler () {
         });
 
     if (uncommittedFiles.length > 0) {
-        log(error("You have uncommitted changes. Please commit your changes before deploying."))
+        log(chalk.red("You have uncommitted changes. Please commit your changes before deploying."))
         return;
     }
 
@@ -116,10 +127,10 @@ async function releaseHandler () {
 
     await simpleExec("dotnet build", ".");
     await simpleExec(
-        'dotnet release nuget' +
-        '--project ./Sources./Glutinum.Feliz.ReactResizeDetector.fsproj' +
-        '--source nuget.org' +
-        '--api-key %nuget_key%'
+        'dotnet release nuget ' +
+        '--project ./src/Glutinum.Feliz.ReactResizeDetector.fsproj ' +
+        '--source nuget.org ' +
+        `--api-key ${nugetKey}`
     )
 
     const versionInfo  = await getLastVersion();
