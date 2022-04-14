@@ -8,3 +8,18 @@ nuget Fable.Core
 nuget Feliz
 nuget Ionide.KeepAChangelog.Tasks copy_local: true
 nuget Microsoft.SourceLink.GitHub copy_local: true
+
+group Build
+    source https://api.nuget.org/v3/index.json
+    framework: net6.0
+    storage: none
+
+    nuget FSharp.Core
+    nuget Fake.Core.Environment
+    nuget Fake.IO.FileSystem
+    nuget BlackFox.CommandLine
+    nuget Fake.DotNet.Cli
+    nuget Fake.Api.Github
+    nuget BlackFox.Fake.BuildTask
+    nuget BlackFox.PathEnvironment
+    nuget Ionide.KeepAChangelog
