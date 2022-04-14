@@ -6,15 +6,49 @@ import shell from 'shelljs';
 import chalk from 'chalk';
 import concurrently from 'concurrently';
 import { execa } from 'execa';
+import simpleGit from 'simple-git';
+import fs from 'fs';
+import path from 'path';
+import parseChangelog from "changelog-parser";
 
 const info = chalk.blueBright
-const warn = chalk.yellow
-const error = chalk.red
 const success = chalk.green
 const log = console.log
 
 // Crash script on error
 shell.config.fatal = true;
+
+export const getLastVersion = async () => {
+
+    // checks if the package.json and CHANGELOG exist
+    const changelogPath = path.resolve("CHANGELOG.md")
+
+    if (!fs.existsSync(changelogPath)) {
+        log(chalk.red(`CHANGELOG.md not found`))
+    }
+
+    // read files content
+    const changelogContent = fs.readFileSync(changelogPath).toString().replace("\r\n", "\n")
+
+    const changelog = await parseChangelog({ text: changelogContent })
+
+    let versionInfo = undefined;
+
+    // Find the first version which is not Unreleased
+    for (const version of changelog.versions) {
+        if (version.title.toLowerCase() !== "unreleased") {
+            versionInfo = version;
+            break;
+        }
+    }
+
+    if (versionInfo === undefined) {
+        log(chalk.red(`No version ready to be released found in the CHANGELOG.md`))
+        process.exit(1)
+    }
+
+    return versionInfo;
+}
 
 async function cleanHandler() {
     log(info("Cleaning..."));
@@ -62,6 +96,20 @@ async function devHandler() {
 }
 
 async function releaseHandler () {
+    const status = await simpleGit().status();
+
+    // Get all the uncommitted changes
+    // We make an exception for the CHANGELOG.md file
+    const uncommittedFiles =
+        status.files.filter((file) => {
+            return file.path !== "CHANGELOG.md"
+        });
+
+    if (uncommittedFiles.length > 0) {
+        log(error("You have uncommitted changes. Please commit your changes before deploying."))
+        return;
+    }
+
     await cleanHandler();
 
     log(info("Building..."));
@@ -73,6 +121,20 @@ async function releaseHandler () {
         '--source nuget.org' +
         '--api-key %nuget_key%'
     )
+
+    const versionInfo  = await getLastVersion();
+
+    await simpleGit()
+        // Add the changes done to the files that can be updated
+        // during the release process
+        .add("CHANGELOG.md")
+        .commit(`Release ${versionInfo.version}`)
+        // Create a new tag for the release
+        .addAnnotatedTag(`v${versionInfo.version}`, `Release ${versionInfo.version}`)
+        // Push the changes to the remote
+        .push()
+        // Push the tag to the remote
+        .push("origin", `${versionInfo.version}`)
 }
 
 yargs(hideBin(process.argv))
