@@ -24,7 +24,7 @@ NUGET
       Fable.Core (>= 3.0)
       FSharp.Core (>= 4.7.2)
     Fable.Core (3.6.2)
-    Fable.React (7.4.3)
+    Fable.React (8.0.1)
       Fable.Browser.Dom (>= 2.4.4)
       Fable.Core (>= 3.2.7)
       FSharp.Core (>= 4.7.2)
@@ -36,7 +36,7 @@ NUGET
     Feliz.CompilerPlugins (1.7)
       Fable.AST (>= 3.0)
       FSharp.Core (>= 4.7.2)
-    FSharp.Core (6.0.3) - redirects: force
+    FSharp.Core (5.0.2) - redirects: force
     Ionide.KeepAChangelog.Tasks (0.1.6) - copy_local: true
     Microsoft.Build.Tasks.Git (1.1.1) - copy_local: true
     Microsoft.SourceLink.Common (1.1.1) - copy_local: true
