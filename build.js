@@ -145,7 +145,7 @@ async function releaseHandler () {
         // Push the changes to the remote
         .push()
         // Push the tag to the remote
-        .push("origin", `${versionInfo.version}`)
+        .push("origin", `v${versionInfo.version}`)
 }
 
 yargs(hideBin(process.argv))
