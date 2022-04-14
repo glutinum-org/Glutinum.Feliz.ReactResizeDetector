@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageProjectUrl>https://github.com/glutinum-org/Glutinum.Feliz.ReactResizeDetector</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/glutinum-org/Glutinum.Feliz.ReactResizeDetector</RepositoryUrl>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Authors>Maxime Mangel</Authors>
+    <ChangelogFile>../CHANGELOG.md</ChangelogFile>
+  </PropertyGroup>
+  <!-- For SourceLink. See: https://github.com/dotnet/sourcelink#using-source-link-in-net-projects -->
+  <PropertyGroup>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+  </PropertyGroup>
+  <PropertyGroup>
+    <NpmDependencies>
+      <NpmPackage Name="react-resize-detector" Version="&gt;= 7.0.0" ResolutionStrategy="Max" />
+    </NpmDependencies>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Types.fs" />
+    <Compile Include="Interop.fs" />
+    <Compile Include="ResizeDetector.fs" />
+    <Compile Include="UseResizeDetector.fs" />
+    <Compile Include="Exports.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\LICENSE.txt" Pack="true" PackagePath="$(PackageLicenseFile)" />
+  </ItemGroup>
+  <Import Project="..\.paket\Paket.Restore.targets" />
+</Project>

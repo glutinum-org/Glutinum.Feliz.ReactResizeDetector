@@ -9,7 +9,7 @@
         "**/CVS": true,
         "**/.DS_Store": true,
         "**/Thumbs.db": true,
-        "**/*.fs.js": true,
+        "**/*.fs.js": false,
         "**/*.fs.js.map": true,
         "**/bin": true,
         "**/obj": true,
