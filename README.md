@@ -1,7 +1,6 @@
 # Glutinum.Feliz.ReactResizeDetector
 
-Binding for [https://www.npmjs.com/package/react-resize-detector]
-(react-resize-detector)
+Binding for [react-resize-detector](https://www.npmjs.com/package/react-resize-detector)
 
 ## Usage
 
